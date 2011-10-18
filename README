@@ -1,3 +1,8 @@
 Work in progress open hardware radar altimeter.
 
-All hardware is currently untested.
+The mr_radar_sandbox sandbox test board has fairly bad performance up at 3.4GHz to 3.5GHz.
+I am measuring about 2dB loss across the TRL through trace (e-cal) and a S11/S22 of ~-7dB.
+The traces only look acceptable up until about 2.5GHz. Based off some fuzzy synthetic TDR using a VNA, I suspect this might be due to the SMA connectors.
+I am currently working on redesigning mr_radar_sandbox to use end-launch connectors, and to be mostly single sided so I can manufacture the boards on campus using a mill.
+
+Currently in progress is also some simulation of VCO linearization algorithms. 

@@ -1,0 +1,6 @@
+This is an attempt to simulate in MATLAB the VCO nonlinearity correction technique described in the following paper:
+
+Meta, A.; Hoogeboom, P.; Ligthart, L.P.; , "Signal Processing for FMCW SAR," Geoscience and Remote Sensing, IEEE Transactions on , vol.45, no.11, pp.3519-3532, Nov. 2007
+doi: 10.1109/TGRS.2007.906140
+URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4373378&isnumber=4373350
+
