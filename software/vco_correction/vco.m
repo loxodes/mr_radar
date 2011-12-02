@@ -13,12 +13,7 @@ function [ t, fout, perror ] = vco( f_start, f_stop, t_sweep, type, ts, noise)
 % http://www.insidegnss.com/node/2348
     df = (f_stop-f_start)/(t_sweep/ts);     % calculate frequency step per sample time
     f = f_start:df:f_stop;                  % calculate instantaneous frequency of chrip
-    pa = 2*pi*f*ts ;                        % calculate phase change between time steps
-    
-    if(strcmp(type,'pnoise'))
-        n = random('norm',0,noise,1,length(f));
-        pa = pa + n;
-    end
+    pa = 2*pi*f*ts;                         % calculate phase change between time steps
     
     p = mod(cumsum(pa),2*pi);               % calculate phase of cosine at each timestep
     t = 0:ts:t_sweep;                       % create time vector
@@ -26,16 +21,17 @@ function [ t, fout, perror ] = vco( f_start, f_stop, t_sweep, type, ts, noise)
     
     % calculate amplitude of time signal from phase
     if(strcmp(type,'ideal'))
-        fout = cos(p);
+        fout = exp(1j*p);
     elseif strcmp(type, 'awgnoise')
-        fout = awgn(cos(p),noise);
+        fout = awgn(exp(1j*p),noise);
     elseif strcmp(type, 'pnoise')
-        fout = cos(p);
-        perror = mod(cumsum(n),2*pi);
+        n = random('norm',0,noise,1,length(f));
+        fout = exp(1j*(p+2*pi*cumsum(n)));
+        perror = cumsum(n);
     elseif strcmp(type, 'ramp')
         
     else
-         warning('vco: sorry, only ideal and awgnoise vcos are currently supported'); %#ok<WNTAG>
+         warning('vco: sorry, that VCO type is unsupported'); %#ok<WNTAG>
     end
 end
 

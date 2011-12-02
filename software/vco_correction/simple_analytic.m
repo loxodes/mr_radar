@@ -10,11 +10,12 @@ alpha=B/T;
 fc=80e6;
 fs=10*max(fc,B);Ts=1/fs;     
 c=3e8;            
-d=1000;     
+d=10000;     
 tau=2*d/c;                            %time delay 
 N=T/Ts;
 t=linspace(0,T,N);
-noise = .04;
+noise = .1;
+fft_res = 32768;
 
 % Transmitted signal
 St0=exp(1j*pi*(fc*t+0.5*alpha*t.^2));
@@ -68,33 +69,36 @@ sif1 = exp(1j*(2*pi*(fc*tau+alpha*t*tau - .5*alpha*(tau.^2) + cn - cn_tau)));
 sif2 = sif1 .* conj(se_t);
 
 % plot sif1
-[sif1fft,f]= TwoSidedFFT(sif1,fs,7500 );
-subplot(2,1,1);
+[sif1fft,f]= TwoSidedFFT(sif1,fs,fft_res );
+subplot(4,1,1);
 plot(f,abs(sif1fft));
 title('spectrum of single stationary target with noisy VCO');
 xlabel('frequency');
 ylabel('amplitude');
 
 % plot sif2
-[sif2fft,f]= TwoSidedFFT(sif2,fs,7500 );
-subplot(2,1,2);
+[sif2fft,f]= TwoSidedFFT(sif2,fs,fft_res );
+subplot(4,1,2);
 plot(f,abs(sif2fft));
 title('spectrum of single stationary, corrected for transmitter nonlinearity');
 xlabel('frequency (Hz)');
 ylabel('amplitude');
 
-% Calculate and plot RVP (sif3)
-frvp = (fs/2)*linspace(-1,1,length(t));
 % add range dependant phase shift
-sif3 = ifft(ifftshift(  fftshift(fft(sif2)) .* exp(1j*pi*(frvp.*frvp)/alpha)  ));
-se_rvp = ifft(ifftshift(fftshift(fft(se_t)) .* exp(1j*pi*(frvp.*frvp)/alpha)));
-%subplot(4,1,3);
-[sif3fft,f]= TwoSidedFFT(sif3,fs,7500 );
-%plot(f,abs(sif3fft));
+
+[sif2f,f] = twosidedfft(sif2,fs, length(sif2));
+sif3 = ifft(ifftshift((sif2f .* (exp(-1j*pi*(f.^2)/alpha)))));
+
+[sef,f] = twosidedfft(exp(1j*cn_tau),fs, length(se_t));
+se_rvp =  ifft(ifftshift((sef .* (exp(-1j*pi*(f.^2)/alpha)))));
+
+subplot(4,1,3);
+[sif3fft,f]= TwoSidedFFT(sif3,fs,fft_res);
+plot(f,abs(sif3fft));
 
 % Calculted and plot corrected signal
-sif4 = sif3 .* se_rvp;
-[sif4fft,f]= TwoSidedFFT(sif4,fs,7500);
-%subplot(4,1,4);
-%plot(f,abs(sif4fft));
+sif4 = sif3 .* conj(se_rvp);
+[sif4fft,f]= twosidedfft(sif4,fs,fft_res);
+subplot(4,1,4);
+plot(f,abs(sif4fft));
 
