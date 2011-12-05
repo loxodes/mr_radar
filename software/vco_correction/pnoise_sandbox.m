@@ -8,7 +8,7 @@ t_total = 2;     % second
 fc = 5000;
 t = 0:ts:t_total-ts;
 
-f_maxdev = 1000;  % hertz
+f_maxdev = 1;  % hertz
 theta_maxdev = ((2*pi*f_maxdev) * ts)/(2*pi);
 maxdev = f_maxdev * ts;
 

@@ -1,4 +1,4 @@
-function [ t_lo_cleaned ] = remove_perror( t_lo, ts, perror, t_sweep, tau, bsweep)
+function [ t_lo_cleaned ] = remove_perror( t_lo, ts, perror, t_sweep, bsweep)
     fs = 1/ts;
 
     se_t = exp(1j*2*pi*perror);
