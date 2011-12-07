@@ -2,18 +2,18 @@ clc; clear; clf;
 %set(0,'defaultaxesfontsize',16);
 %set(0,'defaulttextfontsize',16);
 
-% mr_radar vco test 
-f_start = 4e6;          % start frequency (Hz)
-f_stop = 8e6;           % stop frequency (Hz)
-t_sweep = 2e-3;         % sweep time (s)
-type = 'pnoise';        % vco type ('ideal', 'awgnoise')
-vco_snr = 5e-3;         % vco snr for awgnoise (dB)
-ts = 1e-7;              % sample time
-tbounce = 20e-5;        % target distance (s)
-f_cutoff = 1e6;         % mixer filter cutoff frequency (Hz)
-smooth = 4;             % frequency bins
-bwthreshold = .5;       % 3dB bandwidth
-trefdelay = 100e-9;     % reference delay
+% mr_radar vco test
+f_start = 4e6; % start frequency (Hz)
+f_stop = 8e6; % stop frequency (Hz)
+t_sweep = 2e-3; % sweep time (s)
+type = 'ramp'; % vco type ('ideal', 'awgnoise')
+vco_snr = 3e-3; % vco snr for awgnoise (dB)
+ts = 1e-7; % sample time
+tbounce = 20e-5; % target distance (s)
+f_cutoff = 1e6; % mixer filter cutoff frequency (Hz)
+smooth = 4; % frequency bins
+bwthreshold = .5; % 3dB bandwidth
+trefdelay = 100e-9; % reference delay
 
 bsweep = (f_stop-f_start)/t_sweep;
 % create time and frequency vectors for VCO
@@ -33,7 +33,11 @@ bsweep = (f_stop-f_start)/t_sweep;
 
 % determine perror from reference delay signal
 [ t_ref_if ] = mixer( t_ref, t_rf, f_cutoff, ts );
-[ cerror ] = find_perror( t_ref_if, ts, trefdelay, bsweep );
+
+%[ t_if_rx_ref ] = mixer( t_rf, t_rx_ref, f_cutoff, ts );
+
+%[ t_ref_if, t_if ] = split_ref( t_if_rx_ref, trefdelay, ts, bsweep );
+[ cerror ] = find_perror( t_ref_if, ts, bsweep );
 
 % remove estimated error
 [ t_if_c ] = remove_perror(t_if, ts, cerror, t_sweep, bsweep);
@@ -49,7 +53,7 @@ nfft = 2^nextpow2(length(t_if_c));
 fft_if = fft(t_if_c,nfft);
 f_fft_if = linspace(0,1,nfft/2+1)/(2*ts);
 f_if_lp = f_fft_if(f_fft_if < f_cutoff);
-f_if_lp_singlesided =  2*abs(fft_if(1:length(f_if_lp)));
+f_if_lp_singlesided = 2*abs(fft_if(1:length(f_if_lp)));
 plot(f_if_lp,10*log10(f_if_lp_singlesided));
 grid on;
 
@@ -62,7 +66,7 @@ nfft = 2^nextpow2(length(t_if));
 fft_if = fft(t_if,nfft);
 f_fft_if = linspace(0,1,nfft/2+1)/(2*ts);
 f_if_lp = f_fft_if(f_fft_if < f_cutoff);
-f_if_lp_singlesided =  2*abs(fft_if(1:length(f_if_lp)));
+f_if_lp_singlesided = 2*abs(fft_if(1:length(f_if_lp)));
 plot(f_if_lp,10*log10(f_if_lp_singlesided));
 grid on;
 df = f_cutoff/length(f_if_lp_singlesided);
