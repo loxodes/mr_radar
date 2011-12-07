@@ -6,8 +6,8 @@ clc; clear; clf;
 f_start = 4e6;          % start frequency (Hz)
 f_stop = 6e6;           % stop frequency (Hz)
 t_sweep = 2e-3;         % sweep time (s)
-type = 'ramp';        % vco type ('ideal', 'awgnoise')
-vco_snr = 2e-4;         % vco snr for awgnoise (dB)
+type = 'pnoise';        % vco type ('ideal', 'awgnoise')
+vco_snr = 1e-2;         % vco snr for awgnoise (dB)
 ts = 1e-7;              % sample time
 tbounce = 20e-5;        % target distance (s)
 f_cutoff = 1e6;         % mixer filter cutoff frequency (Hz)
@@ -31,8 +31,7 @@ bsweep = (f_stop-f_start)/t_sweep;
 % determine perror from reference delay and lo
 [ t_ref_lo ] = mixer( t_ref, t_rf, f_cutoff, ts );
 [ cerror ] = find_perror( t_ref_lo, ts, trefdelay, bsweep, perror, real_ierror );
-%recerror = perror;
-% cerror = perror;
+
 % remove estimated error
 [ t_lo_c ] = remove_perror(t_lo, ts, cerror, t_sweep, bsweep);
 
@@ -52,8 +51,7 @@ plot(f_lo_lp,10*log10(f_lo_lp_singlesided));
 grid on;
 
 df = f_cutoff/length(f_lo_lp_singlesided);
-fprintf('bandwidth of %d MHz\n', (evaluate_signal(df,f_lo_lp_singlesided, bwthreshold, smooth)/1e6))
-
+fprintf('bandwidth with filtering: %d MHz\n', (evaluate_signal(df,f_lo_lp_singlesided, bwthreshold, smooth)/1e6))
 
 % display one sided spectrum of t_lo without filtering
 subplot(4,2,4);
@@ -64,6 +62,8 @@ f_lo_lp = f_fft_lo(f_fft_lo < f_cutoff);
 f_lo_lp_singlesided =  2*abs(fft_lo(1:length(f_lo_lp)));
 plot(f_lo_lp,10*log10(f_lo_lp_singlesided));
 grid on;
+df = f_cutoff/length(f_lo_lp_singlesided);
+fprintf('bandwidth without filtering: %d MHz\n', (evaluate_signal(df,f_lo_lp_singlesided, bwthreshold, smooth)/1e6))
 
 % display spectrogram of transmitted and received chirps
 % change to time as x axis
