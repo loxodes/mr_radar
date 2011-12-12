@@ -4,7 +4,7 @@ function [ x_delayed ] = delay_line( x, delay, ts )
 % The last delay seconds of the input signal are trimmed to preserve the length of x.
 % delay_line returns x_delayed, a delayed version of x.
 % This function is used to simulate delay from the reference path and the reflected signal.
-    x_delayed = [zeros(1,delay/ts) x];
+    x_delayed = [zeros(1,round(delay/ts)) x];
     x_delayed = x_delayed(1:length(x));
 end
 

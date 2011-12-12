@@ -4,9 +4,9 @@ function [ t, fout, perror, n ] = vco( f_start, f_stop, t_sweep, type, ts, noise
 % Generates a t_sweep (seconds) long chrip from f_start (Hz) to f_stop (Hz).
 % The sample time ts is needed.
 % vco can simulate an ideal vco, a vco with additive white gaussian noise, or with phase noise.
-% type determines the type of vco ('ideal', 'awgnoise', 'pnoise', 'triangle')
+% type determines the type of vco ('ideal', 'awgnoise', 'pnoise', 'ramp', 'burguy')
 % noise determines the level of noise. 9
-% The mixer is simulated using a phase accumulator, so the phase is continuous across changes in instantaneous frequency. 
+% The vco is simulated using a phase accumulator, so the phase is continuous across changes in instantaneous frequency. 
 % Returns a time vector t and a time domain representation of the signal fout.
 
     df = (f_stop-f_start)/(t_sweep/ts);     % calculate frequency step per sample time
@@ -37,7 +37,7 @@ function [ t, fout, perror, n ] = vco( f_start, f_stop, t_sweep, type, ts, noise
         t_start = .2 * t_sweep;
         t_stop = .6 * t_sweep;
         t_total = t_sweep;
-        f_maxdev = 100000;
+        f_maxdev = 5e6;
         theta_maxdev = ((2*pi*f_maxdev) * ts)/(2*pi);
 
         r_width = (t_stop-t_start)/2;

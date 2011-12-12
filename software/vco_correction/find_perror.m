@@ -1,4 +1,4 @@
-function [ perror ] = find_perror( t_ref_if, ts, trefdelay, bsweep )
+ function [ perror ] = find_perror( t_ref_if, ts, trefdelay, bsweep )
 % find_perror find the phase error in the vco
 % [ perror ] = find_perror( t_ref_if, ts, trefdelay, bsweep )
 % requires sample time ts, sweep bandwidth bsweep, 
@@ -13,9 +13,9 @@ function [ perror ] = find_perror( t_ref_if, ts, trefdelay, bsweep )
     
     % calculate instantanous phase error against expected phase change
     iperror = -(diff(ref_if_phase)-ideal_tickphase)*(ts/(trefdelay))/(2*pi);
-    iperror(1:floor(10*trefdelay/ts)) = 0;
+    iperror(1:floor(10*trefdelay/ts)) = 0; % ignore bouncy first bit of reflection
     
     % calculate cumulative phase error
     perror = -cumsum(cumsum(iperror));
-    perror = [perror,perror(end)];    
+    perror = [perror,perror(end)];
 end
