@@ -4,3 +4,4 @@ Meta, A.; Hoogeboom, P.; Ligthart, L.P.; , "Signal Processing for FMCW SAR," Geo
 doi: 10.1109/TGRS.2007.906140
 URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4373378&isnumber=4373350
 
+Run radar_vco_test.m to start the simulation, parameters are located at the top of that file.
