@@ -1,9 +1,11 @@
 Work in progress open hardware radar altimeter.
 
-The mr_radar_sandbox sandbox test board has fairly bad performance up at 3.4GHz to 3.5GHz.
+The mr_radar_frogpond test board works. The VCO and amplifier footprint and circuits are tested.
+I am waiting on mr_radar_platypus (a board which tests the RF and analog circuity in the radar) to arrive from China.
+
+The through hole vertical SMA connectors on mr_radar_sandbox sandbox test board have fairly bad performance at 3.4GHz.
 I am measuring about 2dB loss across the TRL through trace (e-cal) and a S11/S22 of ~-7dB.
-The traces only look acceptable up until about 2.5GHz. Based off some fuzzy synthetic TDR using a VNA, I suspect this might be due to the SMA connectors. The U.fl test trace worked fairly well, ~-20dB S11 and S22 across 3.2GHz to 3.5GHz.
+The traces only look acceptable up until about 2.5GHz. 
+Based off some fuzzy synthetic TDR measurements, it appears most of this reflection is happening at the SMA connectors. 
+The U.fl test trace works fairly well, ~-20dB S11 and S22 across 3.2GHz to 3.5GHz.
 
-The mr_radar_frogpond test board works. Therefore, the VCO and amplifier footprint and circuits are tested.
-
-Currently in progress is also some simulation of VCO linearization algorithms. 
