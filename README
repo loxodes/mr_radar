@@ -9,3 +9,7 @@ The traces only look acceptable up until about 2.5GHz.
 Based off some fuzzy synthetic TDR measurements, it appears most of this reflection is happening at the SMA connectors. 
 The U.fl test trace works fairly well, ~-20dB S11 and S22 across 3.2GHz to 3.5GHz.
 
+Board layout is done so using Cadsoft Eagle.
+Diagrams are drawn using Dia.
+
+
