@@ -1,13 +1,19 @@
-Work in progress open hardware radar altimeter.
+mr_radar is an in progress open hardware frequency modulated continuous wave radar.
+It is initially intended to be a radar altimter to stabalize remote control quad-rotor helicopters and UAVs.
+If I add more complex signal processing and detection, it should be capable of radar imaging.
+
+One of the goals of this project is to make it easily reproducible and inexpensive with easily sourcable components.
 
 The mr_radar_frogpond test board works. The VCO and amplifier footprint and circuits are tested.
-I am waiting on mr_radar_platypus (a board which tests the RF and analog circuity in the radar) to arrive from China.
+I am waiting on components from mr_radar_platypus (a board with the RF and IF amplifier of the radar) to arrive.
 
-The through hole vertical SMA connectors on mr_radar_sandbox sandbox test board have fairly bad performance at 3.4GHz.
+The through hole vertical SMA connectors on the mr_radar_sandbox test board have fairly bad performance at 3.4GHz.
 I am measuring about 2dB loss across the TRL through trace (e-cal) and a S11/S22 of ~-7dB.
 The traces only look acceptable up until about 2.5GHz. 
 Based off some fuzzy synthetic TDR measurements, it appears most of this reflection is happening at the SMA connectors. 
-The U.fl test trace works fairly well, ~-20dB S11 and S22 across 3.2GHz to 3.5GHz.
+The U.fl test traces work fairly well, ~-20dB S11 and S22 across 3.2GHz to 3.5GHz.
+
+The patch antenna board is built and working, with performance matching agilent ADS simulations. 
 
 Board layout is done so using Cadsoft Eagle.
 Diagrams are drawn using Dia.
