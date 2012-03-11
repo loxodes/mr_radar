@@ -21,9 +21,9 @@
 
 #define RAMP_LENGTH 512 
 #define TRIGGER_LEN 10
-#define ADC_BUFFER_LEN 4096 
+#define ADC_BUFFER_LEN 16384 
 
-DAC_InitTypeDef  DAC_InitStructure;
+DAC_InitTypeDef DAC_InitStructure;
 
 uint16_t Ramp12bit[RAMP_LENGTH];
 uint16_t Trigger12bit[RAMP_LENGTH];
@@ -32,7 +32,6 @@ uint16_t ADC_Buffer[ADC_BUFFER_LEN];
 __IO uint8_t KeyPressed = 1; 
 
 void TIM6_Config(void);
-
 void DAC_Ch1_TriggerConfig(void);
 void DAC_Ch2_RampConfig(void);
 void ADC3_CH12_DMA_Config(void);
@@ -76,14 +75,14 @@ int main(void)
   DAC_Init(DAC_Channel_1, &DAC_InitStructure);
   DAC_Init(DAC_Channel_2, &DAC_InitStructure);
 
-  ADC3_CH12_DMA_Config(); 
-  ADC_SoftwareStartConv(ADC3);
-
   DAC_Ch2_RampConfig();
   DAC_Ch1_TriggerConfig();
 
   USART_Config();
   
+  ADC3_CH12_DMA_Config(); 
+  ADC_SoftwareStartConv(ADC3);
+ 
   STM_EVAL_LEDOn(LED5);
     
   while (1)
@@ -93,8 +92,15 @@ int main(void)
         // blast out adc over serial
         ADC_DMARequestAfterLastTransferCmd(ADC3, DISABLE);
         USART_BufferBlast();
+
         STM_EVAL_LEDOn(LED3);
-        ADC_DMARequestAfterLastTransferCmd(ADC3, ENABLE);
+        
+        // not the most elegant solution...
+        ADC_DeInit();
+        DMA_DeInit(DMA2_Stream0);
+        ADC3_CH12_DMA_Config(); 
+        ADC_SoftwareStartConv(ADC3);
+
         KeyPressed = 1;
     }
   }
@@ -103,12 +109,27 @@ int main(void)
 void USART_BufferBlast(void)
 {
     uint16_t i;
+    for(i=0;i<10;i++){
+        Usart3Put(0x55);
+    }
+    Usart3Put('s');
+    Usart3Put('t');
+    Usart3Put('a');
+    Usart3Put('r');
+    Usart3Put('t');
     for(i=0;i<ADC_BUFFER_LEN;i++) {
         if(ADC_Buffer[i] > 0x1FF)
             STM_EVAL_LEDOn(LED4);
-        Usart3Put((ADC_Buffer[i] >> 4) & 0xFF);
-       // Usart3Put((ADC_Buffer[i] >> 8) & 0xFF);
+        else
+            STM_EVAL_LEDOff(LED4);
+        Usart3Put((ADC_Buffer[i]) & 0xFF);
+        Usart3Put((ADC_Buffer[i] >> 8) & 0xFF);
+        ADC_Buffer[i] = 0;
     }
+    Usart3Put('s');
+    Usart3Put('t');
+    Usart3Put('o');
+    Usart3Put('p');
 }
 
 // TIM6 configuration is based on CPU @168MHz and APB1 @42MHz
@@ -227,7 +248,7 @@ void ADC3_CH12_DMA_Config(void)
   GPIO_Init(GPIOC, &GPIO_InitStructure);
 
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4;
   ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
   ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
   ADC_CommonInit(&ADC_CommonInitStructure);
@@ -289,7 +310,7 @@ void DAC_Ch1_TriggerConfig(void)
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-  DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+  DMA_InitStructure.DMA_Priority = DMA_Priority_Low;
   DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;         
   DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
   DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
