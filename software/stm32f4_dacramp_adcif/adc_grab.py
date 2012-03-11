@@ -7,19 +7,25 @@ import serial
 from numpy.fft import *
 import pdb
 from pylab import *
+import numpy
 
 c = 3e8
 ts = 1/(1.2e6)
 ser = serial.Serial('/dev/ttyACM1', 9600, timeout=1)
 nsamples = pow(2,14)
-bsweep = 100e9
+bsweep = 100e9 # hz/second
+dead_zone = 5 # meters
+threshold= .5e7
+pulses = 10
+
 t = [i * ts for i in range(nsamples)]
 
-while(True):
+for p in range(pulses):
     data = []
 
     while(ser.read(3) != '\x55\x55\x55'):
         print 'waiting for dump...'
+        ser.write('r')
 
     s = ser.read()
     while(s == '\x55'):
@@ -51,11 +57,20 @@ while(True):
     fdata = fft(data)
     f = fftfreq(len(data), ts)
     d = [((freq/2) / bsweep) * c for freq in f]
+    d = d[:(len(d)/2)]
     fdata = [pow(fi.real * fi.real + fi.imag * fi.imag, .5) for fi in fdata]
-    plot(d[:(len(d)/2)], fdata[:len(fdata)/2])
-
+    fdata = fdata[:len(fdata)/2]
+    plot(d, fdata)
+    
     title('distance of targets')
     ylabel('amplitude')
     xlabel('distance (meters)')
     
-    show()
+    print 'targets found:'
+    fd_array = numpy.array(fdata)
+    d_array = numpy.array(d)
+
+    print d_array[fd_array > threshold]
+
+ser.close()
+show()

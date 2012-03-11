@@ -38,7 +38,7 @@ void ADC3_CH12_DMA_Config(void);
 void USART_Config(void);
 void Usart3Put(uint8_t ch);
 void USART_BufferBlast(void); 
-uint8_t Usart2Get(void);
+uint8_t Usart3Get(void);
 
 int main(void)
 {
@@ -87,7 +87,7 @@ int main(void)
     
   while (1)
   {
-    if(!KeyPressed) {
+    if(Usart3Get() == 'r') {
         STM_EVAL_LEDOn(LED6);
         // blast out adc over serial
         ADC_DMARequestAfterLastTransferCmd(ADC3, DISABLE);
@@ -101,7 +101,7 @@ int main(void)
         ADC3_CH12_DMA_Config(); 
         ADC_SoftwareStartConv(ADC3);
 
-        KeyPressed = 1;
+  //      KeyPressed = 1;
     }
   }
 }
