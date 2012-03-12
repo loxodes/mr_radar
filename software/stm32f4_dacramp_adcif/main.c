@@ -11,9 +11,7 @@
 
     adapted from texane's stlink makefiles
 */
-
-#include "stm32f4xx_conf.h"
-#include "stm32f4_discovery.h"
+#define ARM_MATH_CM4 1
 
 #define DAC_DHR12R2_ADDRESS    0x40007414
 #define DAC_DHR12R1_ADDRESS    0x40007408
@@ -22,6 +20,10 @@
 #define RAMP_LENGTH 512 
 #define TRIGGER_LEN 10
 #define ADC_BUFFER_LEN 16384 
+
+#include "stm32f4xx_conf.h"
+#include "stm32f4_discovery.h"
+#include "arm_math.h"
 
 DAC_InitTypeDef DAC_InitStructure;
 
@@ -40,10 +42,10 @@ void Usart3Put(uint8_t ch);
 void USART_BufferBlast(void); 
 uint8_t Usart3Get(void);
 
+
 int main(void)
 {
-  uint16_t i;
-  
+  uint16_t i;  
   GPIO_InitTypeDef GPIO_InitStructure;
   
   STM_EVAL_LEDInit(LED4);
@@ -84,7 +86,8 @@ int main(void)
   ADC_SoftwareStartConv(ADC3);
  
   STM_EVAL_LEDOn(LED5);
-    
+  
+
   while (1)
   {
     if(Usart3Get() == 'r') {
@@ -189,7 +192,7 @@ void USART_Config(void)
   // set USART for 9600 baud, 1 stop no parity
   USART_StructInit(&USART_InitStructure);
   //https://my.st.com/public/STe2ecommunities/mcu/Lists/STM32Discovery/DispForm.aspx?ID=1563&RootFolder=%2Fpublic%2FSTe2ecommunities%2Fmcu%2FLists%2FSTM32Discovery%2F[STM32F4-Discovery]%20UART4%20Problem
-  USART_InitStructure.USART_BaudRate = 30000; // not really, actually 9600.. see above link
+  USART_InitStructure.USART_BaudRate = (115200 * 3); // not really, actually 115200.. see above link
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
   USART_InitStructure.USART_Parity = USART_Parity_No ;

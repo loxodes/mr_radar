@@ -11,12 +11,22 @@ import numpy
 
 c = 3e8
 ts = 1/(1.2e6)
-ser = serial.Serial('/dev/ttyACM1', 9600, timeout=1)
 nsamples = pow(2,14)
 bsweep = 100e9 # hz/second
 dead_zone = 5 # meters
 threshold= .5e7
 pulses = 10
+bus_pirate = 1
+
+# setup serial for bus pirate in USART passthrough mode
+if(bus_pirate):
+    ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
+    ser.write('m\x133\x139\x131\x131\x131\x132\13(1)\x13y'
+    ser.flushInput()
+# setup serial for MSP430 launchpad eval board serial
+else:
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+
 
 t = [i * ts for i in range(nsamples)]
 
