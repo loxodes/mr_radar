@@ -11,26 +11,17 @@ import numpy
 
 c = 3e8
 ts = 1/(1.2e6)
-nsamples = pow(2,14)
+nsamples = pow(2,13)
 bsweep = 100e9 # hz/second
 dead_zone = 5 # meters
-threshold= .5e7
-pulses = 10
-bus_pirate = 1
-
-# setup serial for bus pirate in USART passthrough mode
-if(bus_pirate):
-    ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
-    ser.write('m\x133\x139\x131\x131\x131\x132\13(1)\x13y'
-    ser.flushInput()
-# setup serial for MSP430 launchpad eval board serial
-else:
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-
-
+threshold = .1e7
+pulses = 1
+clutter_pulses = 0
+clutter = numpy.zeros(nsamples/2)
+bus_pirate = 0
 t = [i * ts for i in range(nsamples)]
 
-for p in range(pulses):
+def grab_pulse(ser):
     data = []
 
     while(ser.read(3) != '\x55\x55\x55'):
@@ -53,34 +44,64 @@ for p in range(pulses):
 
     if(ser.read(4) != 'stop'):
         print 'something went wrong..'
+    
+    return data
 
-
-    print 'completed capture, displaying..'
-
-    subplot(2,1,1)
-    plot([ti * (1e3) for ti in t], data)
-    title('time domain samples')
-    xlabel('time (ms)')
-    ylabel('amplitude')
-
-    subplot(2,1,2)
+def process_distance(data):
     fdata = fft(data)
     f = fftfreq(len(data), ts)
     d = [((freq/2) / bsweep) * c for freq in f]
     d = d[:(len(d)/2)]
-    fdata = [pow(fi.real * fi.real + fi.imag * fi.imag, .5) for fi in fdata]
+    fdata = [pow(pow(fi.real,2) + pow(fi.imag,2), .5) for fi in fdata]
     fdata = fdata[:len(fdata)/2]
-    plot(d, fdata)
-    
-    title('distance of targets')
-    ylabel('amplitude')
-    xlabel('distance (meters)')
-    
-    print 'targets found:'
-    fd_array = numpy.array(fdata)
-    d_array = numpy.array(d)
+    return d, fdata
 
-    print d_array[fd_array > threshold]
+def main():
+    # setup serial for bus pirate in USART passthrough mode
+    if(bus_pirate):
+        ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
+        ser.write('m\x133\x139\x131\x131\x131\x132\13(1)\x13y')
+        ser.flushInput()
+    # setup serial for MSP430 launchpad eval board serial
+    else:
+        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+    
+    for p in range(clutter_pulses):
+        data = grab_pulse(ser)
+        d, fdata = process_distance(data)
+        clutter += numpy.array(fdata)
+    if clutter_pulses:
+        clutter /= float(clutter_pulses) 
 
-ser.close()
-show()
+    for p in range(pulses):
+        data = grab_pulse(ser)
+        print 'completed capture...'
+
+        subplot(2,1,1)
+        plot([ti * (1e3) for ti in t], data)
+        title('time domain samples')
+        xlabel('time (ms)')
+        ylabel('amplitude')
+
+        subplot(2,1,2)
+        d, fdata = process_distance(data)
+       
+        fd_array = numpy.array(fdata) - clutter
+        d_array = numpy.array(d)
+
+        plot(d_array, fd_array)
+        title('distance of targets')
+        ylabel('amplitude')
+        xlabel('distance (meters)')
+        
+        print 'targets found:'
+        print d_array[fd_array > threshold]
+
+    ser.close()
+    show()
+
+
+if __name__ == "__main__":
+    main()
+
+
