@@ -21542,6 +21542,8 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <part name="GND29" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="JP5" library="SparkFun-Connectors" deviceset="M05" device="LOCK"/>
 <part name="JP9" library="SparkFun-Connectors" deviceset="M05" device="LOCK"/>
+<part name="C16" library="resistor" deviceset="C-EU" device="C0603" value="100nF"/>
+<part name="GND30" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -21610,8 +21612,8 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <instance part="GND23" gate="1" x="22.86" y="68.58"/>
 <instance part="C14" gate="G$1" x="2.54" y="93.98"/>
 <instance part="GND24" gate="1" x="2.54" y="83.82"/>
-<instance part="C15" gate="G$1" x="12.7" y="93.98"/>
-<instance part="GND25" gate="1" x="12.7" y="83.82"/>
+<instance part="C15" gate="G$1" x="10.16" y="93.98"/>
+<instance part="GND25" gate="1" x="10.16" y="83.82"/>
 <instance part="JP7" gate="G$1" x="66.04" y="99.06" rot="R180"/>
 <instance part="FRAME1" gate="G$1" x="-38.1" y="40.64"/>
 <instance part="FRAME1" gate="G$2" x="109.22" y="40.64"/>
@@ -21629,6 +21631,8 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <instance part="GND29" gate="1" x="96.52" y="147.32"/>
 <instance part="JP5" gate="G$1" x="203.2" y="116.84" rot="R180"/>
 <instance part="JP9" gate="G$1" x="106.68" y="165.1" rot="R180"/>
+<instance part="C16" gate="G$1" x="17.78" y="93.98"/>
+<instance part="GND30" gate="1" x="17.78" y="83.82"/>
 </instances>
 <busses>
 </busses>
@@ -21759,6 +21763,10 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <pinref part="U1" gate="G$1" pin="GND3"/>
 <wire x1="27.94" y1="81.28" x2="22.86" y2="81.28" width="0.1524" layer="91"/>
 <junction x="22.86" y="81.28"/>
+<pinref part="U1" gate="G$1" pin="TEST"/>
+<wire x1="27.94" y1="91.44" x2="22.86" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="91.44" x2="22.86" y2="88.9" width="0.1524" layer="91"/>
+<junction x="22.86" y="88.9"/>
 </segment>
 <segment>
 <pinref part="R6" gate="G$1" pin="1"/>
@@ -21782,7 +21790,7 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <segment>
 <pinref part="GND25" gate="1" pin="GND"/>
 <pinref part="C15" gate="G$1" pin="-"/>
-<wire x1="12.7" y1="86.36" x2="12.7" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="86.36" x2="10.16" y2="88.9" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C8" gate="G$1" pin="-"/>
@@ -21825,6 +21833,11 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <pinref part="JP9" gate="G$1" pin="3"/>
 <pinref part="JP9" gate="G$1" pin="4"/>
 <pinref part="JP9" gate="G$1" pin="5"/>
+</segment>
+<segment>
+<pinref part="C16" gate="G$1" pin="2"/>
+<pinref part="GND30" gate="1" pin="GND"/>
+<wire x1="17.78" y1="88.9" x2="17.78" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -22039,6 +22052,10 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <pinref part="U1" gate="G$1" pin="3V3OUT"/>
 <wire x1="27.94" y1="99.06" x2="25.4" y2="99.06" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="99.06" x2="25.4" y2="96.52" width="0.1524" layer="91"/>
+<pinref part="C16" gate="G$1" pin="1"/>
+<wire x1="25.4" y1="99.06" x2="17.78" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="99.06" x2="17.78" y2="96.52" width="0.1524" layer="91"/>
+<junction x="25.4" y="99.06"/>
 </segment>
 </net>
 <net name="N$10" class="0">
@@ -22047,13 +22064,13 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 <pinref part="U1" gate="G$1" pin="VCC"/>
 <wire x1="0" y1="101.6" x2="2.54" y2="101.6" width="0.1524" layer="91"/>
 <pinref part="C14" gate="G$1" pin="1"/>
-<wire x1="2.54" y1="101.6" x2="12.7" y2="101.6" width="0.1524" layer="91"/>
-<wire x1="12.7" y1="101.6" x2="27.94" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="101.6" x2="10.16" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="101.6" x2="27.94" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="2.54" y1="96.52" x2="2.54" y2="101.6" width="0.1524" layer="91"/>
 <junction x="2.54" y="101.6"/>
 <pinref part="C15" gate="G$1" pin="+"/>
-<wire x1="12.7" y1="96.52" x2="12.7" y2="101.6" width="0.1524" layer="91"/>
-<junction x="12.7" y="101.6"/>
+<wire x1="10.16" y1="96.52" x2="10.16" y2="101.6" width="0.1524" layer="91"/>
+<junction x="10.16" y="101.6"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -22135,6 +22152,30 @@ Source: http://www.analog.com/static/imported-files/data_sheets/AD711.pdf</descr
 </nets>
 </sheet>
 </sheets>
+<errors>
+<approved hash="104,1,27.94,86.36,U1,GND1,GND,,,"/>
+<approved hash="104,1,27.94,83.82,U1,GND2,GND,,,"/>
+<approved hash="104,1,27.94,81.28,U1,GND3,GND,,,"/>
+<approved hash="104,1,27.94,96.52,U1,VCCIO,N$7,,,"/>
+<approved hash="104,1,27.94,88.9,U1,AGND,GND,,,"/>
+<approved hash="104,1,27.94,101.6,U1,VCC,N$10,,,"/>
+<approved hash="207,1,160.02,213.36,+3V3,out,,,,"/>
+<approved hash="207,1,175.26,215.9,+3V3,sup,,,,"/>
+<approved hash="207,1,160.02,182.88,+5V,out,,,,"/>
+<approved hash="207,1,175.26,185.42,+5V,sup,,,,"/>
+<approved hash="115,1,121.92,122.407,D1,,,,,"/>
+<approved hash="115,1,108.543,123.385,JP1,,,,,"/>
+<approved hash="115,1,178.122,115.57,LED1,,,,,"/>
+<approved hash="115,1,198.797,177.605,JP2,,,,,"/>
+<approved hash="115,1,198.797,210.625,JP3,,,,,"/>
+<approved hash="115,1,198.797,149.665,JP4,,,,,"/>
+<approved hash="115,1,71.7973,106.485,JP6,,,,,"/>
+<approved hash="115,1,61.6373,97.5953,JP7,,,,,"/>
+<approved hash="115,1,86.256,133.246,FRAME1,,,,,"/>
+<approved hash="115,1,54.0173,162.365,JP8,,,,,"/>
+<approved hash="115,1,198.797,115.375,JP5,,,,,"/>
+<approved hash="115,1,102.277,163.635,JP9,,,,,"/>
+</errors>
 </schematic>
 </drawing>
 </eagle>
