@@ -5,7 +5,6 @@ mr_radar is an in development open hardware frequency modulated continuous wave 
 It is a radar altimeter for remote control quad-rotor helicopters and UAVs.
 Eventually, it may be capable of radar imaging.
 
-![mr_radar_platypus testing](mr\_radar.jpg)
 
 One of the goals of this project is to be easily reproducible and inexpensive.
 All of the microwave components are available online from manufacturers or resellers like DigiKey, Allied Electronics, or Mini-Circuits. I have avoided using expensive components like circulators or SAW delay lines, even though they sound like fun. No chips with exposed pads are used, it is possible to assemble the boards with a soldering iron. All of the printed circuit boards are intended for plain inexpensive FR4 (which means filtering is done using chip filters and lumped elements, not distributed elements) and could be purchased from inexpensive board houses such as seeedstudio or iteadstudio. (I have several spares of most boards, I am willing to mail them out in exchange for postage.)
@@ -25,6 +24,9 @@ Some software has been written for this project:
 * stm32f4_dacramp_adcif contains the code for the STM32F4 to generate the VCO control signal and sample the IF, and some python code to grab data off the STM32F4 and test signal processing
 * vco_correction is an attempt at a VCO non-linearity correction algorithm. It is untested on hardware (because it requires expensive delay lines)
 * compression is an in-progress (class project for a data compression class) to do image compression on the radar images (on the microcontroller)
+
+
+![mr_radar_platypus testing](https://github.com/loxodes/mr_radar/raw/master/mr_radar.jpg)
 
 Board layout is done so using Cadsoft Eagle.
 
