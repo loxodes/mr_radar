@@ -1,0 +1,7 @@
+I'm working on a compression algorithm for mr_radar suitable for relaying back radar images as a class project for a data compression course.
+
+It isn't going to be groundbreaking or particularly efficient, but it is open source and will be designed to work on microcontrollers.
+
+Right now, I'm assuming that it will work on a bitmap of the few highest amplitude targets, with information on the amplitude and distance. Until I get the radar flying to get some good images, I'll be using Shuttle Radar Topography Mission ".hgt" files to develop and test the algorithm.
+
+I haven't yet decided on what compression algorithm to use, or how to model the elevation data (that will be determined over the next six or seven weeks).
