@@ -18,6 +18,7 @@ Several test boards have been created for this project:
 * mr_radar_sandbox did not work as expected, the through hole SMA connector did not perform well at 3.4 GHz (but the U.fl did!)
 * mr_radar_trolley is an in-progress board with voltage regulators, a VCO driver amplifier, and a USB-USART chip
 * mr_radar_sandcastle is an untested board to evaluate an alternate mixer, a power splitter, and a directional coupler.
+* mr_radar_pulser is an untested pulsed RF source
 
 Some software has been written for this project:
 
@@ -33,6 +34,8 @@ Board layout is done so using Cadsoft Eagle.
 Diagrams are drawn using Dia.
 
 Software is written in Matlab, Python, and C. 
+
+Simulations are done in Agilent ADS and LTSpice.
 
 Measurements (s-parameters, noise figure measurements) are available in data/ 
 
