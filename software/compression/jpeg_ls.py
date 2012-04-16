@@ -6,8 +6,14 @@
 # and The LOCO-I Lossless Image Compression Algorithm: Principles and Standardization into JPEG-LS
 # Marcelo J. Weinberger, Gadiel Seroussi, and Guillermo Sapiro
 
+# Evaluation of JPEG-LS, the New Lossless and
+# Controlled-Lossy Still Image Compression Standard,
+# for Compression of High-Resolution Elevation Data
+# Shantanu D. Rane and Guillermo Sapiro, Member, IEEE
+
+
 # supports monochrome images
-# lossless only
+# currently lossless only
 
 #    c  a  d
 # e  b  x  <-- current pixel
@@ -23,6 +29,7 @@ B_CONTEXT = 1
 C_CONTEXT = 2
 N_CONTEXT = 3
 
+
 def jpegls_encode(image, bpp):
     output = []
     height = len(image)
@@ -30,14 +37,15 @@ def jpegls_encode(image, bpp):
 
     bmax = max(2, bpp) 
     l_max = 2 * (bmax * max(8, bmax))
-    irun = 0
     
+    irun = 0
     # initialize context table
     context_table = [[max(2, numpy.floor(((pow(2,bpp)+32)/64))),0,0,1] for i in range(365)]
 
 
     for row in range(height): 
         output.append([])
+        run = 0
         for col in range(width):
             x = image[row][col]
             a = image[row-1][col]
@@ -46,6 +54,28 @@ def jpegls_encode(image, bpp):
             d = image[row+1][col+1]
             e = image[row][col-2]
             sign = 1
+
+            if(run):
+                # add check for end of line
+                if(run == m):
+                    output += '1'
+                    run = 0
+                    irun += 1
+                    m = updatem(irun)
+
+                if(x == a):
+                    run += 1
+                    if(x == width - 1):
+                        output += '1'
+                        irun += 1
+                        # update m run table?
+                    continue
+                else:
+                    
+                    output += '0' + bin(run)[2:]
+                    irun -= 1
+                    run = 0
+                    m = updatem(irun)
 
             # for the first and last column, whenever undefined,
             # the samples at positions a and d are assumed to equal b
@@ -59,17 +89,16 @@ def jpegls_encode(image, bpp):
             
             if g1 == g2 == g3 == 0:
                 # do run length encoding
-                # run reguardless of contex until other symbol
+                run += 1
+                continue
                 # (may be zero run, or stop at end of line, 
-                # encode run length, e = x - b (b is sample above x?)
-                        
                 # read new samples until x!=a, or end of line
                 # let m = 2^g be golomb code,
                 # for each segment of length m, append  1 to output bit stream and increment i1
                 # if ran to end of line, append 1 to bistream
                 # otherwise, append 0 and use binary representation of resudial g bits, decrese irun
                 # encode run interruption sample, continue
-
+                
 
             else:
                 if(c >= max(a,b)):
@@ -124,7 +153,15 @@ def thresh_quantize(g, threshold):
     return 2
 
 def gpo2_encode(m, codeword):
-    pass
+    quotient = unary(codeword / m)
+    remainder = bin(codeword % m)[2:]
+    return quotient + remainder
+
+def unary(x):
+    return x * '0' + '1'
 
 def jpegls_decode(image):
     pass
+
+def updatem(irun):
+    return m
