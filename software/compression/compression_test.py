@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 
 filename = 'N19W156_fill.hgt' # holes filled using SRTMFill
 width = 1201
+output = 'output_file'
 
 # calculate the entropy of an (up to) 2d array 
 def entropy(im):
@@ -33,6 +34,12 @@ def read_hgt(filename, width):
     elev = [[z_raw[width*j + i] for i in range(width)] for j in range(width)]
     return elev
 
+def save_array(data):
+    data = list(np.array(data).flatten())
+    s = struct.pack(">" + str(len((data))) + "i", *data)       
+    fout = open(output, "w")
+    fout.write(s)
+    fout.close()
 
 def main():
     # read in test file 
@@ -47,11 +54,11 @@ def main():
     # try simple differential model
     plt.subplot(3,1,2)
     elev_diff = [[elev[j][i] - (i>0) * elev[j][i - 1] for i in range(width)] for j in range(width)]
-    
+    save_array(elev_diff) 
     imshow(np.log1p(elev_diff))
     plt.title('hawaii diff')
     print 'entropy (after differential model): ' + str(entropy(elev_diff))
-  
+     
     # stick compression algorithm here!
     # to be determined.. 
 
