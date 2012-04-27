@@ -1,22 +1,15 @@
 # jpeg-ls encoder/decoder
 # pass in list of lists
-# uses notation and algorithm from LOCO-I: A Low Complexity, Context-Based, Lossless Image Compression Algorithm
-# Marcelo J. Weinberger, Gadiel Seroussi, and Guillermo Sapiro, Hewlett-Packard Laboratories
-
+# uses notation and algorithm from: 
 # and The LOCO-I Lossless Image Compression Algorithm: Principles and Standardization into JPEG-LS
 # Marcelo J. Weinberger, Gadiel Seroussi, and Guillermo Sapiro
-
-# Evaluation of JPEG-LS, the New Lossless and
-# Controlled-Lossy Still Image Compression Standard,
-# for Compression of High-Resolution Elevation Data
-# Shantanu D. Rane and Guillermo Sapiro, Member, IEEE
 
 
 # supports monochrome images
 # currently lossless only
 
-#    c  a  d
-# e  b  x  <-- current pixel
+#  c  b  d
+#  a  x  <-- current pixel
 
 import numpy
 
@@ -29,32 +22,30 @@ B_CONTEXT = 1
 C_CONTEXT = 2
 N_CONTEXT = 3
 
+N0 = 64 # reset threshold for N, set between 32 and 256
 
 def jpegls_encode(image, bpp):
     output = []
     height = len(image)
     width = len(image[0])
 
+    # step 0, initialization
+    # compute lmax
     bmax = max(2, bpp) 
     l_max = 2 * (bmax * max(8, bmax))
+    alpha = pow(2, bpp)
+
+    # initialize context table, [A, B, C, N]
+    context_table = [[max(2, numpy.floor(((alpha+32)/64))),0,0,1] for i in range(365)]
     
+    # initialize irun
     irun = 0
-    # initialize context table
-    context_table = [[max(2, numpy.floor(((pow(2,bpp)+32)/64))),0,0,1] for i in range(365)]
-
-
+    
     for row in range(height): 
         output.append([])
         run = 0
         for col in range(width):
-            x = image[row][col]
-            a = image[row-1][col]
-            b = image[row][col-1]
-            c = image[row-1][col-1]
-            d = image[row+1][col+1]
-            e = image[row][col-2]
-            sign = 1
-
+            # check for run mode processing
             if(run):
                 # add check for end of line
                 if(run == m):
@@ -71,24 +62,39 @@ def jpegls_encode(image, bpp):
                         # update m run table?
                     continue
                 else:
-                    
                     output += '0' + bin(run)[2:]
                     irun -= 1
                     run = 0
                     m = updatem(irun)
+            
+            # otherwise.. single component encoding
+            # find neighboring pixels
+            x = image[row][col]
+            a = image[row][col-1]
+            b = image[row-1][col]
+            c = image[row-1][col-1]
+            d = image[row-1][col+1]
+            sign = 1
+            
+            # special cases: first and last column, first row
+            if row == 0:
+                b = 0
+                c = 0
+                d = 0
+            
+            if col == 0:
+                a = b
 
-            # for the first and last column, whenever undefined,
-            # the samples at positions a and d are assumed to equal b
-            # and position c is copied from the value that was assigned to a
-            # for the first sample of the previous line
-           
-            # compute local gradients
-            g1 = d - a
+            if col == width - 1:
+                d = b
+
+            # step 1, compute local gradients
+            g1 = d - b
             g2 = a - c
             g3 = c - b
             
+            # step 2, check for run mode processing
             if g1 == g2 == g3 == 0:
-                # do run length encoding
                 run += 1
                 continue
                 # (may be zero run, or stop at end of line, 
@@ -101,19 +107,11 @@ def jpegls_encode(image, bpp):
                 
 
             else:
-                if(c >= max(a,b)):
-                    x_hat = min(a,b)
-                elif(c <= min(a,b)):
-                    x_hat = max(a,b)
-                else:
-                    x_hat = a + b - c
-                
-                r = x - x_hat
-
-
-                g4 = b - e
-                # quantize gradients
+                # step 3, quantize the local gradients 
                 C = vect_quantize([g1, g2, g3], quan_vector)
+                
+                # step 4, compute context
+                # determine sign bit
                 for i in range(len(C)):
                     if C[i] < 0:
                         C = [-q for q in C]
@@ -123,24 +121,76 @@ def jpegls_encode(image, bpp):
                         continue
                     else:
                         break
-                
+                # compute context index, gather contexts
                 context = sum([C[i] * pow(len(quan_vector),i) for i in range(len(C))])
+                
+                A = context_table[context][A_CONTEXT]
+                B = context_table[context][B_CONTEXT]
+                C = context_table[context][C_CONTEXT]
+                N = context_table[context][N_CONTEXT]
 
-                context_table[context] = 
-                 
+                # step 5, compute fixed prediction
+                if(c >= max(a,b)):
+                    x_hat = min(a,b)
+                elif(c <= min(a,b)):
+                    x_hat = max(a,b)
+                else:
+                    x_hat = a + b - c
+                
+                # step 6, correct prediction with context table, clamp
+                x_hat = x_hat + sign * C
+                
+                if x_hat < 0:
+                    x_hat = 0
+                if x_hat > alpha - 1:
+                    x_hat = alpha - 1
+                
+                # step 7, compute prediction residual
+                r = sign * (x - x_hat)
+                
+                # this doesn't entirely make sense yet.. stepping by alpha feels extreme
+                while r <= numpy.floor(-alpha/2):
+                    r += alpha
+                while r > numpy.ceil(alpha/2) + 1:
+                    r -= alpha
 
-                # map triplet to range [1,364] (0 is RLE), use index for context counter
+                # step 8, compute golumn parameter k
+                k = 0
+                while (N << k) < A:
+                    k += 1
+                
+                # step 9, map residual
 
-                # compute fixed prediction
+                # step 10, golomb encode prediction residual using k
+                                
+                # step 11 and 12, update context counters 
 
-                # correct fixed prediction by adding C for context, clamp corrected value, obtain new prediction
+                A += abs(r)
+                B += r
+                
+                if N == N0:
+                    N = numpy.floor(N/2)
+                    A = numpy.floor(A/2)
+                    B = numpy.floor(B/2)
 
-                # compute residual, flip if negative
-                # reduce residual modulo alphabet to range
+                N += 1
+                
+                if B <= -N:
+                    C -= 1
+                    B += N
+                    if B <= -N:
+                        B = -N + 1
+                elif B > 0:
+                    C += 1
+                    B -= N
+                    if B > 0:
+                        B = 0
 
-                # compute golomb paramter
+                context_table[context][A_CONTEXT] = A
+                context_table[context][B_CONTEXT] = B
+                context_table[context][C_CONTEXT] = C
+                context_table[context][N_CONTEXT] = N
 
-                # update contetx counters, B, C
 
 def vect_quantize(g_vect, vector):
     return [[g > v for v in vector].index(False)-1 for g in g_vect]
