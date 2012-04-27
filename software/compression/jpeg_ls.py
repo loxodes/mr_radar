@@ -40,55 +40,56 @@ def jpegls_encode(image, bpp):
     
     # initialize irun
     irun = 0
-    
+    m = 8 # !!! what should this init to? 
     for row in range(height): 
         output.append([])
         run = 0
+        
         for col in range(width):
-            # check for run mode processing
-            if(run):
-                # add check for end of line
-                if(run == m):
-                    output += '1'
-                    run = 0
-                    irun += 1
-                    m = updatem(irun)
-
-                if(x == a):
-                    run += 1
-                    if(x == width - 1):
-                        output += '1'
-                        irun += 1
-                        # update m run table?
-                    continue
-                else:
-                    output += '0' + bin(run)[2:]
-                    irun -= 1
-                    run = 0
-                    m = updatem(irun)
-            
-            # otherwise.. single component encoding
-            # find neighboring pixels
+            # determine context pixels, with special cases: first and last column, first row
             x = image[row][col]
-            a = image[row][col-1]
-            b = image[row-1][col]
-            c = image[row-1][col-1]
-            d = image[row-1][col+1]
             sign = 1
             
-            # special cases: first and last column, first row
             if row == 0:
                 b = 0
                 c = 0
                 d = 0
-            
+            else:
+                b = image[row-1][col]
+                c = image[row-1][col-1]
+                if col == width - 1:
+                    d = b
+                else:
+                    d = image[row-1][col+1]
+                
             if col == 0:
                 a = b
+            else:
+                a = image[row][col-1]
+            
+            # check for run mode processing
+            if(run):
+                if(run == m):
+                    output[-1].append('1')
+                    run = 0
+                    irun += 1
+                    m = updatem(irun, m)
 
-            if col == width - 1:
-                d = b
-
-            # step 1, compute local gradients
+                if x == a:
+                    run += 1
+                    if(col == width - 1):
+                        output[-1].append('1')
+                        irun += 1
+                        # update m run table?
+                    continue
+                else:
+                    output[-1].append('0' + bin(run)[2:])
+                    irun -= 1
+                    run = 0
+                    m = updatem(irun, m)
+            
+            # otherwise.. single component encoding
+                        # step 1, compute local gradients
             g1 = d - b
             g2 = a - c
             g3 = c - b
@@ -97,32 +98,24 @@ def jpegls_encode(image, bpp):
             if g1 == g2 == g3 == 0:
                 run += 1
                 continue
-                # (may be zero run, or stop at end of line, 
-                # read new samples until x!=a, or end of line
-                # let m = 2^g be golomb code,
-                # for each segment of length m, append  1 to output bit stream and increment i1
-                # if ran to end of line, append 1 to bistream
-                # otherwise, append 0 and use binary representation of resudial g bits, decrese irun
-                # encode run interruption sample, continue
-                
 
             else:
                 # step 3, quantize the local gradients 
-                C = vect_quantize([g1, g2, g3], quan_vector)
+                Q = vect_quantize([g1, g2, g3], quan_vector)
                 
                 # step 4, compute context
                 # determine sign bit
-                for i in range(len(C)):
-                    if C[i] < 0:
-                        C = [-q for q in C]
+                for i in range(len(Q)):
+                    if Q[i] < 0:
+                        Q = [-q for q in Q]
                         sign = -1
                         break
-                    elif C[i] == 0:
+                    elif Q[i] == 0:
                         continue
                     else:
                         break
                 # compute context index, gather contexts
-                context = sum([C[i] * pow(len(quan_vector),i) for i in range(len(C))])
+                context = 81 * Q[0] + 9 * Q[1] + Q[2]
                 
                 A = context_table[context][A_CONTEXT]
                 B = context_table[context][B_CONTEXT]
@@ -153,16 +146,27 @@ def jpegls_encode(image, bpp):
                     r += alpha
                 while r > numpy.ceil(alpha/2) + 1:
                     r -= alpha
-
+                
                 # step 8, compute golumn parameter k
                 k = 0
                 while (N << k) < A:
                     k += 1
                 
                 # step 9, map residual
+                if k == 0 and 2 * B <= -N:
+                    if r >= 0:
+                        r_map = 2 * r + 1
+                    else:
+                        r_map = -2 * (r + 1)
+                else:
+                    if r >= 0:
+                        r_map = 2 * r
+                    else:
+                        r_map = -2 * r - 1
 
                 # step 10, golomb encode prediction residual using k
-                                
+                output[-1].append(gpo2_encode(m, r_map)) # add limiting to l_max!
+
                 # step 11 and 12, update context counters 
 
                 A += abs(r)
@@ -190,7 +194,7 @@ def jpegls_encode(image, bpp):
                 context_table[context][B_CONTEXT] = B
                 context_table[context][C_CONTEXT] = C
                 context_table[context][N_CONTEXT] = N
-
+    return output
 
 def vect_quantize(g_vect, vector):
     return [[g > v for v in vector].index(False)-1 for g in g_vect]
@@ -213,5 +217,6 @@ def unary(x):
 def jpegls_decode(image):
     pass
 
-def updatem(irun):
+def updatem(irun, m):
+    print 'updating run (STUB)'
     return m
