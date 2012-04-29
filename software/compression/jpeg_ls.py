@@ -36,7 +36,7 @@ def jpegls_encode(image, bpp):
     # step 0, initialization
     # compute lmax
     bmax = max(2, bpp) 
-    l_max = 2 * (bmax * max(8, bmax))
+    l_max = 2 * (bmax + max(8, bmax))
     alpha = pow(2, bpp)
 
     # initialize context table, [A, B, C, N]
@@ -89,7 +89,7 @@ def jpegls_encode(image, bpp):
                     if col + run >= width - 1:
                         break
                     x = image[row][col+run]
-
+                print 'run count: ' + str(run)
                 col += run
 
                 while run >= (1 << J[irun]):
@@ -99,10 +99,13 @@ def jpegls_encode(image, bpp):
                         irun += 1
                 
                 if x_run != x:
-                    output[-1].append('0' + bin(run)[2:])
+                    output[-1].append('0')
+                    output[-1].append(bin(run)[2:])
+
                     if irun > 0:
                         irun -= 1
-                    
+                    print 'encoding with interruption context'
+
                     # encode residual using interruption context
                     a = image[row][col-1]
                     if row:
@@ -128,7 +131,7 @@ def jpegls_encode(image, bpp):
                     C = context_table[INT_CONTEXT_IDX[int_type]][C_CONTEXT]
                     N = context_table[INT_CONTEXT_IDX[int_type]][N_CONTEXT]
     
-                    t = a + int_type * (N >> 1)    
+                    t = A + int_type * (N >> 1)    
                  
                     k = compute_k(N, t)
                     
@@ -143,18 +146,20 @@ def jpegls_encode(image, bpp):
 
                     r_map = 2 * abs(r) - int_type - map
                     
-                    output[-1].append(gpo2_encode(k, r_map)) # ADD LIMITING
+                    output[-1].append(gpo2_encode(k, r_map, l_max - J[irun] -1, bpp))
 
                     if r < 0:
                         NN[int_type] += 1
+                    
+                    pdb.set_trace() 
                     
                     A += (r_map + int_type) >> 1
                     if N == N0:
                         N = N / 2
                         A = A / 2
                         NN[int_type] = NN[int_type] / 2
-                    
                     N += 1
+                    
                     context_table[INT_CONTEXT_IDX[int_type]][A_CONTEXT] = A
                     context_table[INT_CONTEXT_IDX[int_type]][N_CONTEXT] = N
 
@@ -225,12 +230,7 @@ def jpegls_encode(image, bpp):
                         r_map = -2 * r - 1
 
                 # step 10, golomb encode prediction residual using k
-                if r_map >> k < l_max - bpp - 1:
-                    output[-1].append(gpo2_encode(k, r_map))
-                else:
-                    word = bin(r_map)[2:]
-                    word = '0' * (bpp - len(word)) + word
-                    output[-1].append('0' * (l_max - bpp - 1) + '1' + word)
+                output[-1].append(gpo2_encode(k, r_map, l_max - bpp - 1, bpp))
 
                 # step 11 and 12, update context counters 
                 A += abs(r)
@@ -287,14 +287,22 @@ def vect_quantize(g_vect, vector):
             q[i] = 4
     return q 
 
-def gpo2_encode(k, codeword):
-    if k:
-        quotient = unary(codeword / k)
+def gpo2_encode(k, codeword, limit, bpp):
+    quotient = unary(codeword >> k) 
+    remainder = binpad(codeword % pow(2,k),k)
+    
+    if len(quotient) < limit:
+        return quotient + remainder
     else:
-        quotient = ''
-        k = pow(2,16) # FIX !!
-    remainder = bin(codeword % k)[2:]
-    return quotient + remainder
+        return limit * '0' + '1' + binpad(codeword - 1, bpp)
 
+def binpad(x, l):
+    y = bin(x)[2:]
+    return (l - len(y)) * '0' + y
+
+def bin_encode(output):
+    # encode string list to binary
+    # pad output with zeros to reach byte
+    pass
 def unary(x):
     return x * '0' + '1'
