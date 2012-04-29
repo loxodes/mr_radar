@@ -35,8 +35,7 @@ def jpegls_encode(image, bpp):
 
     # step 0, initialization
     # compute lmax
-    bmax = max(2, bpp) 
-    l_max = 2 * (bmax + max(8, bmax))
+    l_max = 2 * (bpp + max(8, bpp))
     alpha = pow(2, bpp)
 
     # initialize context table, [A, B, C, N]
@@ -70,6 +69,10 @@ def jpegls_encode(image, bpp):
                 
             if col == 0:
                 a = b
+                if row == 1:
+                    c = 0
+                else:
+                    c = image[row-2][col] 
             else:
                 a = image[row][col-1]
             
@@ -77,7 +80,8 @@ def jpegls_encode(image, bpp):
             g1 = d - b
             g2 = b - c #a - c ???
             g3 = c - a #c - b ???
-            
+            print str(a) + ' '  + str(b) + ' ' + str(c)+ ' ' + str(d)
+            pdb.set_trace() 
             # step 2, check for run mode processing
             if g1 == g2 == g3 == 0:
                 print 'run mode processing'
@@ -90,7 +94,7 @@ def jpegls_encode(image, bpp):
                         break
                     x = image[row][col+run]
                 print 'run count: ' + str(run)
-                col += run
+                col += run + 1
 
                 while run >= (1 << J[irun]):
                     output[-1].append('1')
@@ -151,9 +155,7 @@ def jpegls_encode(image, bpp):
                     if r < 0:
                         NN[int_type] += 1
                     
-                    pdb.set_trace() 
-                    
-                    A += (r_map + int_type) >> 1
+                    A += (r_map + 1 - int_type) >> 1 # ??? (1 + int_type)?
                     if N == N0:
                         N = N / 2
                         A = A / 2
