@@ -14,7 +14,6 @@
 
 import numpy
 import pdb
-import sys
 
 quan_vector = [-21,-7,-3,0,0,3,7,21] # quantization steps for q1, q2, q3
 
@@ -50,7 +49,6 @@ def jpegls_encode(image, bpp):
         run = 0
         col = 0 
         while col < width:
-            print 'encoding: ' + str(row) + ',' + str(col)
             # determine context pixels, with special cases: first and last column, first row
             x = image[row][col]
             sign = 1
@@ -80,11 +78,9 @@ def jpegls_encode(image, bpp):
             g1 = d - b
             g2 = b - c #a - c ???
             g3 = c - a #c - b ???
-            print 'a:' + str(a) + ' '  + 'b:' + str(b) + ' ' + 'c:' + str(c)+ ' ' + 'd:' + str(d)
             
             # step 2, check for run mode processing
             if g1 == g2 == g3 == 0:
-                print 'run mode processing'
                 run = 0
                 x_run = a
                 x = image[row][col]
@@ -95,7 +91,6 @@ def jpegls_encode(image, bpp):
                         break
                     x = image[row][col+run]
 
-                print 'run count: ' + str(run)
                 col += run
 
                 while run >= (1 << J[irun]):
@@ -110,7 +105,6 @@ def jpegls_encode(image, bpp):
 
                     if irun > 0:
                         irun -= 1
-                    print 'encoding with interruption context'
 
                     # encode residual using interruption context
                     if col:
@@ -169,11 +163,10 @@ def jpegls_encode(image, bpp):
                     context_table[INT_CONTEXT_IDX[int_type]][A_CONTEXT] = A
                     context_table[INT_CONTEXT_IDX[int_type]][N_CONTEXT] = N
                     col += 1
-                else: # end of line
+                elif run > 0:
                     output[-1].append('1')
 
             else:
-                print 'local encoding'
                 # step 3, quantize the local gradients 
                 Q = vect_quantize([g1, g2, g3], quan_vector)
                 
@@ -191,8 +184,6 @@ def jpegls_encode(image, bpp):
 
                 # compute context index, gather contexts
                 context = 81 * Q[0] + 9 * Q[1] + Q[2]
-                print Q
-                print context 
                 A = context_table[context][A_CONTEXT]
                 B = context_table[context][B_CONTEXT]
                 C = context_table[context][C_CONTEXT]
@@ -265,13 +256,11 @@ def jpegls_encode(image, bpp):
                 context_table[context][C_CONTEXT] = C
                 context_table[context][N_CONTEXT] = N
                 col += 1
-            pdb.set_trace()
     return output
 
 def clamp_range(r, alpha):
     while r <= numpy.floor(-alpha/2):
         r += alpha
-    print 'r: ' + str(r)
     while r > numpy.ceil(alpha/2) + 1:
         r -= alpha
     return r
@@ -309,13 +298,14 @@ def vect_quantize(g_vect, vector):
 def gpo2_encode(k, codeword, limit, bpp):
     quotient = unary(codeword >> k) 
     remainder = binpad(codeword % pow(2,k),k)
-    
     if len(quotient) < limit:
         return quotient + remainder
     else:
         return limit * '0' + '1' + binpad(codeword - 1, bpp)
 
 def binpad(x, l):
+    if not l:
+        return ''
     y = bin(x)[2:]
     return (l - len(y)) * '0' + y
 
