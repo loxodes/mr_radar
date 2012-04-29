@@ -1,4 +1,4 @@
-# jpeg-ls encoder
+#i jpeg-ls encoder
 # almost certainly not standards compliant, and entirely unoptimized
 # 
 # uses notation and algorithm from: 
@@ -80,7 +80,7 @@ def jpegls_encode(image, bpp):
             g1 = d - b
             g2 = b - c #a - c ???
             g3 = c - a #c - b ???
-            print str(a) + ' '  + str(b) + ' ' + str(c)+ ' ' + str(d)
+            print 'a:' + str(a) + ' '  + 'b:' + str(b) + ' ' + 'c:' + str(c)+ ' ' + 'd:' + str(d)
             
             # step 2, check for run mode processing
             if g1 == g2 == g3 == 0:
@@ -113,11 +113,13 @@ def jpegls_encode(image, bpp):
                     print 'encoding with interruption context'
 
                     # encode residual using interruption context
-                    a = image[row][col-1]
+                    if col:
+                        a = image[row][col-1]
                     
                     if row:
                         b = image[row-1][col]
 
+                    pdb.set_trace()
                     int_type = a - b == 0
                      
                     if int_type:
