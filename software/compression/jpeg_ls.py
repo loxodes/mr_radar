@@ -69,7 +69,7 @@ def jpegls_encode(image, bpp):
                 
             if col == 0:
                 a = b
-                if row == 1:
+                if row == 1 or row == 0:
                     c = 0
                 else:
                     c = image[row-2][col] 
@@ -81,20 +81,22 @@ def jpegls_encode(image, bpp):
             g2 = b - c #a - c ???
             g3 = c - a #c - b ???
             print str(a) + ' '  + str(b) + ' ' + str(c)+ ' ' + str(d)
-            pdb.set_trace() 
+            
             # step 2, check for run mode processing
             if g1 == g2 == g3 == 0:
                 print 'run mode processing'
                 run = 0
-                x_run = x
-
+                x_run = a
+                x = image[row][col]
+                
                 while x_run == x:
                     run += 1
                     if col + run >= width - 1:
                         break
                     x = image[row][col+run]
+
                 print 'run count: ' + str(run)
-                col += run + 1
+                col += run
 
                 while run >= (1 << J[irun]):
                     output[-1].append('1')
@@ -104,7 +106,7 @@ def jpegls_encode(image, bpp):
                 
                 if x_run != x:
                     output[-1].append('0')
-                    output[-1].append(bin(run)[2:])
+                    output[-1].append(binpad(run,J[irun])) ## !!!
 
                     if irun > 0:
                         irun -= 1
@@ -112,9 +114,10 @@ def jpegls_encode(image, bpp):
 
                     # encode residual using interruption context
                     a = image[row][col-1]
+                    
                     if row:
                         b = image[row-1][col]
-                    
+
                     int_type = a - b == 0
                      
                     if int_type:
@@ -164,7 +167,7 @@ def jpegls_encode(image, bpp):
                     
                     context_table[INT_CONTEXT_IDX[int_type]][A_CONTEXT] = A
                     context_table[INT_CONTEXT_IDX[int_type]][N_CONTEXT] = N
-
+                    col += 1
                 else: # end of line
                     output[-1].append('1')
 
@@ -261,6 +264,7 @@ def jpegls_encode(image, bpp):
                 context_table[context][C_CONTEXT] = C
                 context_table[context][N_CONTEXT] = N
                 col += 1
+            pdb.set_trace()
 
     return output
 
