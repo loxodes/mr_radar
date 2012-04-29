@@ -16,7 +16,7 @@ import numpy
 import pdb
 import sys
 
-quan_vector = [-15,-7,-3,1,0,1,3,7,15] # quantization steps for q1, q2, q3
+quan_vector = [-21,-7,-3,0,0,3,7,21] # quantization steps for q1, q2, q3
 
 A_CONTEXT = 0
 B_CONTEXT = 1
@@ -106,7 +106,7 @@ def jpegls_encode(image, bpp):
                 
                 if x_run != x:
                     output[-1].append('0')
-                    output[-1].append(binpad(run,J[irun])) ## !!!
+                    output[-1].append(binpad(run,J[irun]))
 
                     if irun > 0:
                         irun -= 1
@@ -119,7 +119,6 @@ def jpegls_encode(image, bpp):
                     if row:
                         b = image[row-1][col]
 
-                    pdb.set_trace()
                     int_type = a - b == 0
                      
                     if int_type:
@@ -267,7 +266,6 @@ def jpegls_encode(image, bpp):
                 context_table[context][N_CONTEXT] = N
                 col += 1
             pdb.set_trace()
-
     return output
 
 def clamp_range(r, alpha):
@@ -288,9 +286,22 @@ def vect_quantize(g_vect, vector):
     q = [0,0,0]
     
     for i in range(len(g_vect)):
-        cmp = [g_vect[i] < v for v in vector] 
-        if True in cmp:
-            q[i] = cmp.index(True)-4
+        if g_vect[i] <= vector[0]:
+            q[i] = -4
+        elif g_vect[i] <= vector[1]:
+            q[i] = -3
+        elif g_vect[i] <= vector[2]:
+            q[i] = -2
+        elif g_vect[i] < vector[3]:
+            q[i] = -1
+        elif g_vect[i] <= vector[4]:
+            q[i] = 0
+        elif g_vect[i] < vector[5]:
+            q[i] = 1 
+        elif g_vect[i] < vector[6]:
+            q[i] = 2
+        elif g_vect[i] < vector[7]:
+            q[i] = 3
         else:
             q[i] = 4
     return q 
@@ -308,9 +319,16 @@ def binpad(x, l):
     y = bin(x)[2:]
     return (l - len(y)) * '0' + y
 
-def bin_encode(output):
-    # encode string list to binary
-    # pad output with zeros to reach byte
-    pass
+def bin_encode(output, filename):
+    # not a smart or efficent way of doing this..
+    f = open(filename, 'w')
+    for line in output:
+        binline = ''.join(line)
+        binline += (len(binline) % 8) * '0'
+        for i in range(0,8,len(binline)):
+            f.write(chr(int(binline[i:i+8],2)))
+        f.write('\n')
+    f.close()
+
 def unary(x):
     return x * '0' + '1'
