@@ -2852,9 +2852,9 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="P+15" library="supply1" deviceset="+5V" device=""/>
 <part name="SUPPLY6" library="supply2" deviceset="+10V" device=""/>
 <part name="GND65" library="supply1" deviceset="GND" device=""/>
-<part name="R22" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="110"/>
+<part name="R22" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="JMP"/>
 <part name="P+18" library="supply1" deviceset="+5V" device=""/>
-<part name="R23" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="110"/>
+<part name="R23" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="DNP"/>
 <part name="GND70" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
@@ -2944,7 +2944,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="R11" gate="G$1" x="-114.3" y="-76.2" rot="R180"/>
 <instance part="GND39" gate="1" x="-170.18" y="-71.12" rot="R90"/>
 <instance part="JP1" gate="G$1" x="-193.04" y="-73.66"/>
-<instance part="P+13" gate="1" x="81.28" y="109.22"/>
+<instance part="P+13" gate="1" x="78.74" y="101.6"/>
 <instance part="C30" gate="G$1" x="78.74" y="88.9"/>
 <instance part="GND47" gate="1" x="78.74" y="78.74"/>
 <instance part="C31" gate="G$1" x="99.06" y="63.5" rot="R90"/>
@@ -2978,8 +2978,8 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="SUPPLY5" gate="G$1" x="53.34" y="99.06"/>
 <instance part="GND61" gate="1" x="53.34" y="78.74"/>
 <instance part="C20" gate="G$1" x="-20.32" y="-76.2"/>
-<instance part="P+14" gate="1" x="-20.32" y="-71.12"/>
-<instance part="GND62" gate="1" x="-20.32" y="-83.82"/>
+<instance part="P+14" gate="1" x="-20.32" y="-68.58"/>
+<instance part="GND62" gate="1" x="-20.32" y="-86.36"/>
 <instance part="J$5" gate="1" x="175.26" y="119.38" rot="MR0"/>
 <instance part="GND63" gate="1" x="180.34" y="99.06"/>
 <instance part="JP3" gate="G$1" x="226.06" y="177.8" rot="R270"/>
@@ -3269,6 +3269,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <segment>
 <pinref part="C20" gate="G$1" pin="2"/>
 <pinref part="GND62" gate="1" pin="GND"/>
+<wire x1="-20.32" y1="-83.82" x2="-20.32" y2="-81.28" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="J$5" gate="1" pin="GND@0"/>
@@ -3424,14 +3425,13 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </segment>
 <segment>
 <pinref part="P+13" gate="1" pin="+5V"/>
-<wire x1="81.28" y1="106.68" x2="81.28" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="99.06" x2="78.74" y2="96.52" width="0.1524" layer="91"/>
 <pinref part="C30" gate="G$1" pin="+"/>
-<wire x1="78.74" y1="96.52" x2="78.74" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="99.06" x2="78.74" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C20" gate="G$1" pin="1"/>
 <pinref part="P+14" gate="1" pin="+5V"/>
+<wire x1="-20.32" y1="-71.12" x2="-20.32" y2="-73.66" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP3" gate="G$1" pin="3"/>
