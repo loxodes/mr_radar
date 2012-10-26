@@ -695,9 +695,9 @@ design rules under a new name.</description>
 <attribute name="NAME" x="34.0868" y="35.687" size="0.635" layer="25" font="vector" ratio="16" rot="R90"/>
 <attribute name="VALUE" x="33.9979" y="35.052" size="0.635" layer="27" font="vector" ratio="16" rot="R90"/>
 </element>
-<element name="U4" library="retro" package="SOT89" value="GALI-55+" x="30.48" y="50.165" smashed="yes" rot="R90">
-<attribute name="NAME" x="34.925" y="49.53" size="0.8128" layer="25" font="vector" ratio="16" rot="R90"/>
-<attribute name="VALUE" x="34.8249" y="47.7599" size="0.8128" layer="27" font="vector" ratio="16" rot="R90"/>
+<element name="U4" library="retro" package="SOT89" value="GALI-55+" x="34.925" y="49.8475" smashed="yes" rot="R270">
+<attribute name="NAME" x="30.48" y="50.4825" size="0.8128" layer="25" font="vector" ratio="16" rot="R270"/>
+<attribute name="VALUE" x="30.5801" y="52.2526" size="0.8128" layer="27" font="vector" ratio="16" rot="R270"/>
 </element>
 <element name="R3" library="pel_dipol_comp" package="0603-RES" value="110" x="28.2575" y="53.6575" smashed="yes" rot="R180">
 <attribute name="NAME" x="29.083" y="55.0418" size="0.635" layer="25" font="vector" ratio="16" rot="R180"/>
@@ -711,9 +711,9 @@ design rules under a new name.</description>
 <attribute name="NAME" x="34.4043" y="53.7845" size="0.635" layer="25" font="vector" ratio="16" rot="R90"/>
 <attribute name="VALUE" x="33.9979" y="53.1495" size="0.635" layer="27" font="vector" ratio="16" rot="R90"/>
 </element>
-<element name="U11" library="retro" package="SOT89" value="GALI-55+" x="30.48" y="58.1025" smashed="yes" rot="R90">
-<attribute name="NAME" x="34.925" y="56.8325" size="0.8128" layer="25" font="vector" ratio="16" rot="R90"/>
-<attribute name="VALUE" x="34.8249" y="55.6974" size="0.8128" layer="27" font="vector" ratio="16" rot="R90"/>
+<element name="U11" library="retro" package="SOT89" value="GALI-55+" x="34.925" y="57.785" smashed="yes" rot="R270">
+<attribute name="NAME" x="30.48" y="59.055" size="0.8128" layer="25" font="vector" ratio="16" rot="R270"/>
+<attribute name="VALUE" x="30.5801" y="60.1901" size="0.8128" layer="27" font="vector" ratio="16" rot="R270"/>
 </element>
 <element name="R4" library="pel_dipol_comp" package="0603-RES" value="110" x="28.2575" y="61.595" smashed="yes" rot="R180">
 <attribute name="NAME" x="29.083" y="62.9793" size="0.635" layer="25" font="vector" ratio="16" rot="R180"/>
@@ -793,7 +793,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="10.9855" y="26.4668" size="0.635" layer="25" font="vector" ratio="16" rot="R180"/>
 <attribute name="VALUE" x="10.9855" y="28.6004" size="0.635" layer="27" font="vector" ratio="16" rot="R180"/>
 </element>
-<element name="R11" library="pel_dipol_comp" package="0603-RES" value="JMP" x="5.715" y="17.78" smashed="yes" rot="R90">
+<element name="R11" library="pel_dipol_comp" package="0603-RES" value="DNP" x="5.715" y="17.78" smashed="yes" rot="R90">
 <attribute name="NAME" x="6.1468" y="19.4945" size="0.635" layer="25" font="vector" ratio="16" rot="R90"/>
 <attribute name="VALUE" x="7.0104" y="16.637" size="0.635" layer="27" font="vector" ratio="16" rot="R90"/>
 </element>
@@ -883,10 +883,6 @@ design rules under a new name.</description>
 <contactref element="U8" pad="1"/>
 <contactref element="U8" pad="8"/>
 <contactref element="U8" pad="6"/>
-<contactref element="U4" pad="GND"/>
-<contactref element="U4" pad="GNDPADDLE"/>
-<contactref element="U4" pad="GND"/>
-<contactref element="U4" pad="GNDPADDLE"/>
 <contactref element="U11" pad="GND"/>
 <contactref element="U11" pad="GNDPADDLE"/>
 <contactref element="U11" pad="GND"/>
@@ -1191,8 +1187,7 @@ design rules under a new name.</description>
 <via x="22.225" y="33.02" extent="1-16" drill="0.5" shape="octagon"/>
 <via x="22.225" y="30.7975" extent="1-16" drill="0.5" shape="octagon"/>
 <wire x1="29.54" y1="32.385" x2="32.207" y2="32.385" width="0.4064" layer="1"/>
-<wire x1="29.54" y1="50.165" x2="32.207" y2="50.165" width="0.4064" layer="1"/>
-<wire x1="32.207" y1="58.1025" x2="29.54" y2="58.1025" width="0.4064" layer="1"/>
+<wire x1="33.198" y1="57.785" x2="35.865" y2="57.785" width="0.4064" layer="1"/>
 <wire x1="20.0025" y1="17.7675" x2="20.0025" y2="15.1005" width="0.4064" layer="1"/>
 <via x="26.035" y="58.7375" extent="1-16" drill="0.5" shape="octagon"/>
 <via x="24.765" y="58.7375" extent="1-16" drill="0.5" shape="octagon"/>
@@ -1391,6 +1386,13 @@ design rules under a new name.</description>
 <vertex x="34.925" y="38.1"/>
 </polygon>
 <via x="35.2425" y="38.1" extent="1-16" drill="0.5" shape="octagon"/>
+<contactref element="U4" pad="GND"/>
+<contactref element="U4" pad="GND"/>
+<contactref element="U4" pad="GNDPADDLE"/>
+<contactref element="U4" pad="GNDPADDLE"/>
+<wire x1="30.7975" y1="58.1025" x2="33.198" y2="57.785" width="0" layer="19" extent="1-1"/>
+<wire x1="33.198" y1="49.8475" x2="30.7975" y2="50.165" width="0" layer="19" extent="1-1"/>
+<wire x1="35.865" y1="49.8475" x2="33.198" y2="49.8475" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$2">
 <contactref element="R1" pad="P$1"/>
@@ -1593,13 +1595,11 @@ design rules under a new name.</description>
 <wire x1="29.0075" y1="53.6575" x2="30.0475" y2="53.6575" width="0.6096" layer="1"/>
 </signal>
 <signal name="N$18">
-<contactref element="U4" pad="RFOUT"/>
 <contactref element="C7" pad="P$1"/>
 <contactref element="L3" pad="P$2"/>
 <wire x1="32.7025" y1="53.5425" x2="32.7025" y2="53.34" width="0.3048" layer="1"/>
 <wire x1="32.7025" y1="53.34" x2="32.7025" y2="52.07" width="1.524" layer="1"/>
 <wire x1="32.7025" y1="52.07" x2="32.7025" y2="51.9055" width="0.3048" layer="1"/>
-<wire x1="32.7025" y1="51.9055" x2="32.461" y2="51.664" width="0.3048" layer="1"/>
 <wire x1="31.5475" y1="53.6575" x2="32.5875" y2="53.6575" width="0.6096" layer="1"/>
 <wire x1="32.5875" y1="53.6575" x2="32.7025" y2="53.5425" width="0.6096" layer="1"/>
 <polygon width="0.254" layer="1" thermals="no">
@@ -1611,6 +1611,7 @@ design rules under a new name.</description>
 <vertex x="33.3375" y="53.975"/>
 <vertex x="32.0675" y="53.975"/>
 </polygon>
+<contactref element="U4" pad="RFIN"/>
 </signal>
 <signal name="N$16">
 <contactref element="R4" pad="P$1"/>
@@ -1618,13 +1619,11 @@ design rules under a new name.</description>
 <wire x1="30.0475" y1="61.595" x2="29.0075" y2="61.595" width="0.6096" layer="1"/>
 </signal>
 <signal name="N$20">
-<contactref element="U11" pad="RFOUT"/>
 <contactref element="C8" pad="P$1"/>
 <contactref element="L4" pad="P$2"/>
 <wire x1="32.7025" y1="61.7975" x2="32.7025" y2="61.2775" width="0.3048" layer="1"/>
 <wire x1="32.7025" y1="61.2775" x2="32.7025" y2="60.0075" width="1.524" layer="1"/>
 <wire x1="32.7025" y1="60.0075" x2="32.461" y2="60.0075" width="0.3048" layer="1"/>
-<wire x1="32.461" y1="60.0075" x2="32.461" y2="59.6015" width="0.3048" layer="1"/>
 <wire x1="31.5475" y1="61.595" x2="32.7025" y2="61.595" width="0.6096" layer="1"/>
 <wire x1="32.7025" y1="61.595" x2="32.7025" y2="61.7975" width="0.6096" layer="1"/>
 <polygon width="0.254" layer="1" thermals="no">
@@ -1636,23 +1635,7 @@ design rules under a new name.</description>
 <vertex x="31.75" y="61.595"/>
 <vertex x="32.0675" y="61.9125"/>
 </polygon>
-</signal>
-<signal name="N$19">
 <contactref element="U11" pad="RFIN"/>
-<contactref element="C7" pad="P$2"/>
-<wire x1="32.461" y1="56.6035" x2="32.461" y2="56.439" width="0.3048" layer="1"/>
-<wire x1="32.461" y1="56.439" x2="32.7025" y2="56.1975" width="0.3048" layer="1"/>
-<wire x1="32.7025" y1="56.1975" x2="32.7025" y2="55.5625" width="1.524" layer="1"/>
-<wire x1="32.7025" y1="55.5625" x2="32.7025" y2="55.0425" width="0.3048" layer="1"/>
-<polygon width="0.254" layer="1" thermals="no">
-<vertex x="31.75" y="56.8325"/>
-<vertex x="33.3375" y="56.8325"/>
-<vertex x="33.655" y="56.515"/>
-<vertex x="33.655" y="55.245"/>
-<vertex x="33.3375" y="54.9275"/>
-<vertex x="32.0675" y="54.9275"/>
-<vertex x="31.75" y="55.245"/>
-</polygon>
 </signal>
 <signal name="N$22">
 <contactref element="R5" pad="P$2"/>
@@ -1716,23 +1699,6 @@ design rules under a new name.</description>
 <wire x1="32.7025" y1="45.085" x2="32.7025" y2="44.1325" width="0.8128" layer="1"/>
 <wire x1="32.7025" y1="44.1325" x2="32.695" y2="44.125" width="0.4064" layer="1"/>
 <wire x1="32.695" y1="44.125" x2="32.695" y2="43.1325" width="0.4064" layer="1"/>
-</signal>
-<signal name="N$29">
-<contactref element="C17" pad="P$2"/>
-<contactref element="U4" pad="RFIN"/>
-<wire x1="32.461" y1="48.666" x2="32.7025" y2="48.4245" width="0.3048" layer="1"/>
-<wire x1="32.7025" y1="48.4245" x2="32.7025" y2="48.26" width="0.3048" layer="1"/>
-<wire x1="32.7025" y1="48.26" x2="32.7025" y2="47.3075" width="1.524" layer="1"/>
-<wire x1="32.7025" y1="47.3075" x2="32.7025" y2="46.47" width="0.3048" layer="1"/>
-<polygon width="0.254" layer="1" thermals="no">
-<vertex x="31.75" y="48.895"/>
-<vertex x="31.75" y="46.99"/>
-<vertex x="32.0675" y="46.6725"/>
-<vertex x="33.3375" y="46.6725"/>
-<vertex x="33.655" y="46.99"/>
-<vertex x="33.655" y="48.5775"/>
-<vertex x="33.3375" y="48.895"/>
-</polygon>
 </signal>
 <signal name="N$4">
 <contactref element="C2" pad="P$2"/>
@@ -1861,6 +1827,32 @@ design rules under a new name.</description>
 <wire x1="22.225" y1="35.675" x2="20.435" y2="35.675" width="0.6096" layer="1"/>
 <wire x1="20.435" y1="35.675" x2="20.32" y2="35.56" width="0.6096" layer="1" curve="90"/>
 <wire x1="19.8" y1="35.56" x2="20.32" y2="35.56" width="0.6096" layer="1"/>
+</signal>
+<signal name="N$9">
+<contactref element="U4" pad="RFOUT"/>
+<contactref element="C17" pad="P$2"/>
+<polygon width="0.254" layer="1" thermals="no">
+<vertex x="31.75" y="48.895"/>
+<vertex x="31.75" y="46.99"/>
+<vertex x="32.0675" y="46.6725"/>
+<vertex x="33.3375" y="46.6725"/>
+<vertex x="33.655" y="46.99"/>
+<vertex x="33.655" y="48.5775"/>
+<vertex x="33.3375" y="48.895"/>
+</polygon>
+</signal>
+<signal name="N$23">
+<contactref element="C7" pad="P$2"/>
+<contactref element="U11" pad="RFOUT"/>
+<polygon width="0.254" layer="1" thermals="no">
+<vertex x="31.75" y="56.8325"/>
+<vertex x="33.3375" y="56.8325"/>
+<vertex x="33.655" y="56.515"/>
+<vertex x="33.655" y="55.245"/>
+<vertex x="33.3375" y="54.9275"/>
+<vertex x="32.0675" y="54.9275"/>
+<vertex x="31.75" y="55.245"/>
+</polygon>
 </signal>
 </signals>
 </board>

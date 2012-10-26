@@ -2969,7 +2969,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="U6" library="retro" deviceset="MAX9812" device=""/>
 <part name="U9" library="retro" deviceset="MAX7410" device=""/>
 <part name="J$3" library="SparkFun-Connectors" deviceset="SMA_EDGE" device=""/>
-<part name="R6" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="100"/>
+<part name="R6" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="DNP"/>
 <part name="GND14" library="supply1" deviceset="GND" device=""/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="C10" library="pel_dipol_comp" deviceset="CAPACITOR-POL" device="A" value="10uF"/>
@@ -2989,15 +2989,15 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="C22" library="pel_dipol_comp" deviceset="CAPACITOR" device="-0603" value="DNP"/>
 <part name="R14" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="JMP"/>
 <part name="GND24" library="supply1" deviceset="GND" device=""/>
-<part name="C23" library="pel_dipol_comp" deviceset="CAPACITOR" device="-0603" value="2nH"/>
+<part name="C23" library="pel_dipol_comp" deviceset="CAPACITOR" device="-0603" value="22pF"/>
 <part name="R15" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="JMP"/>
 <part name="GND32" library="supply1" deviceset="GND" device=""/>
-<part name="R16" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="JMP"/>
+<part name="R16" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="DNP"/>
 <part name="P+10" library="supply1" deviceset="+5V" device=""/>
 <part name="C24" library="pel_dipol_comp" deviceset="CAPACITOR" device="-0603" value="100nF"/>
 <part name="P+11" library="supply1" deviceset="+5V" device=""/>
 <part name="GND33" library="supply1" deviceset="GND" device=""/>
-<part name="R7" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="2k"/>
+<part name="R7" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="DNP"/>
 <part name="C25" library="pel_dipol_comp" deviceset="CAPACITOR" device="-0603" value="100nH"/>
 <part name="GND34" library="supply1" deviceset="GND" device=""/>
 <part name="TP1" library="testpad" deviceset="TP" device="TP14SQ"/>
@@ -3022,7 +3022,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="JP2" library="SparkFun-Connectors" deviceset="M06" device="SIP"/>
 <part name="J$6" library="SparkFun-Connectors" deviceset="SMA_EDGE" device=""/>
 <part name="GND64" library="supply1" deviceset="GND" device=""/>
-<part name="R8" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="100"/>
+<part name="R8" library="pel_dipol_comp" deviceset="RESISTOR" device="-0603" value="DNP"/>
 <part name="GND66" library="supply1" deviceset="GND" device=""/>
 <part name="JP4" library="SparkFun-Connectors" deviceset="M03" device="SCREW"/>
 <part name="P+16" library="supply1" deviceset="+5V" device=""/>
